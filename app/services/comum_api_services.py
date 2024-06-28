@@ -1,6 +1,7 @@
 import requests
 from flask import current_app
 from requests.exceptions import HTTPError
+from ..utils.headers import getHeader, getHeaderAuth
 
 class ComumApiServices:
 
@@ -8,12 +9,17 @@ class ComumApiServices:
     token = False
 
     def __init__(self) -> None:
-        self.setTokenAccessComumApi()
+        pass
 
-    def setTokenAccessComumApi(self):
+    def setTokenAccessComumApi(self, params: dict):
         try:
-            login = {"email": current_app.config["API_COMUM_USER"], "password": current_app.config["API_COMUM_PASSWORD"], "idtipointegracao": 2}
-            header = self.getHeader()
+
+            if params.get("default"):
+                login = {"email": current_app.config["API_COMUM_USER"], "password": current_app.config["API_COMUM_PASSWORD"], "idtipointegracao": 2}
+            else:
+                login = params
+            
+            header = getHeader()
             response = requests.get(self.url+"usuarios/login", headers=header, params=login)        
             if response.status_code == 200:
                 token = response.json()
@@ -23,29 +29,17 @@ class ComumApiServices:
         except Exception as err:
             print(f"Other error occurred: {err}")
 
-    def getHeader(self) -> dict:
-        header = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'User-Agent': 'YourCustomUserAgent'
-        }
-        return header
-
-    def getHeaderAuth(self) -> dict:
-        header = {
-            'Authorization': f"Bearer {self.token}",
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'User-Agent': 'YourCustomUserAgent'
-        }
-        return header
-
-    def getMercadoLivreToken(self) -> str:
-        params = {}
-        response = requests.post(self.url+"/login",headers=self.getHeaderAuth(), params=params)        
-        if response.status_code == 200:
-            token = response.json()
-            self.token = token
+    def getMercadoLivreToken(self, idusuario: int, code: str) -> str:
+        try:
+            params = {"idusuario": idusuario, "code": code}
+            response = requests.post(self.url+"integracoes/mercadolivre/autenticacao/token",headers=getHeaderAuth(self.token), params=params)        
+            if response.status_code == 200:
+                token = response.json()
+                return token.get("token")
+        except HTTPError as http_err:
+            print(f"HTTP error occurred: {http_err}")
+        except Exception as err:
+            print(f"Other error occurred: {err}")
 
     def storeAnswers(self) -> None:
         payload = {

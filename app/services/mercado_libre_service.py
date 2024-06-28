@@ -1,28 +1,56 @@
 # my_flask_app/app/services/mercado_libre_service.py
 
 import requests
-from flask import current_app
+from ..routes.strategy_response import create_response, bad_request
+from requests.exceptions import HTTPError
 
 class MercadoLivreServices:
-    
+
+    url_ml_api = "https://api.mercadolibre.com"
+    token = None
+
     def __init__(self) -> None:
         pass
 
-    def send_answer_to_mercadolibre(self, question_data, answer):
-        question_id = question_data['id']
-        access_token = current_app.config['MERCADO_LIBRE_ACCESS_TOKEN']
-        url = f"https://api.mercadolibre.com/answers?access_token={access_token}"
-        
-        payload = {
-            "question_id": question_id,
-            "text": answer
-        }
-        
-        response = requests.post(url, json=payload)
-        if response.status_code == 200:
-            print("Answer successfully sent to Mercado Libre")
-        else:
-            print("Failed to send answer to Mercado Libre", response.text)
+    def set_token_user(self, token: str):
+        self.token = token
 
-    def get_text_question(self):
+    def send_answer_to_mercadolibre(self, question_data, answer):
+        try:
+            question_id = question_data['id']
+            access_token = self.token
+            url = f"https://api.mercadolibre.com/answers?access_token={access_token}"
+            
+            payload = {
+                "question_id": question_id,
+                "text": answer
+            }
+            
+            response = requests.post(url, json=payload)            
+            return create_response(message="Answer successfully sent to Mercado Libre", data=response)
+            
+        except HTTPError as http_err:
+            return bad_request(http_err)
+        except Exception as err:
+            return bad_request(err)
+
+    def get_question_text_from_resource(self, resource: str) -> dict:
+        try:
+            question_id = resource.split("/")
+            url = f"https://api.mercadolibre.com/questions/{question_id[-1]}"
+            
+            headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                "Authorization": 'Bearer ' + self.token
+            }
+            
+            response = requests.get(url,headers=headers)            
+            question = response.json()
+            return question
+            
+        except HTTPError as http_err:
+            return bad_request(http_err)
+        except Exception as err:
+            return bad_request(err)
 

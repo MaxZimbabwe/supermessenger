@@ -1,13 +1,21 @@
 # my_flask_app/app/services/chatgpt_service.py
 
-import openai
+from openai import OpenAI
 from flask import current_app
 
 def get_answer_from_chatgpt(question):
-    openai.api_key = current_app.config['OPENAI_API_KEY']
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=question,
-        max_tokens=150
+    client = OpenAI(
+        api_key=current_app.config['OPENAI_API_KEY'],
     )
-    return response.choices[0].text.strip()
+
+    response = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": question,
+            }
+        ],
+        model="gpt-3.5-turbo",
+    )
+
+    return response['choices'][0]['message']['content'].strip()
