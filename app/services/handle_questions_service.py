@@ -1,6 +1,9 @@
-from .chatgpt_service import get_answer_from_chatgpt
+from .ia_services.cliente_ias import ClientIAs
 from .mercado_libre_service import MercadoLivreServices
 from .comum_api_services import ComumApiServices
+from .questions_manager import QuestionsManager
+from ..notifications.new_question_notify import NewQuestionNotify
+from .usuario_service import UsuarioService
 
 class HandleQuestionsService:
 
@@ -18,9 +21,21 @@ class HandleQuestionsService:
         code = question_data.get('code')
         token_ml = self.getTokenMl(idusario,code)
 
-        ml = MercadoLivreServices()
-        ml.set_token_user(token_ml)
+        mlapi = MercadoLivreServices()
+        mlapi.set_token_user(token_ml)
 
-        question = ml.get_question_text_from_resource(question_data.get("resource"))
-        answer = get_answer_from_chatgpt(question.get("text"))
-        ml.send_answer_to_mercadolibre(question_data, answer)
+        question = mlapi.get_question_text_from_resource(question_data.get("resource"))
+        items = (question.get("item_id"),)
+        subject = mlapi.get_item_details(items)
+        ias = ClientIAs()
+        answer = ias.question(subject[0]["body"].get("title"), question.get("text"))
+
+        user = UsuarioService()
+        token = user.get_fcem_token(idusario)
+        title = subject[0]["body"].get("title")
+        
+        questionmaneger = QuestionsManager()
+        questionmaneger.store({"idusuario": idusario, "questao": title, "resposta": answer, "idstatus": 1})
+
+        # Send a notification 
+        NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)

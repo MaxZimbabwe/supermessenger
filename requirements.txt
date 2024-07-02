@@ -4,3 +4,4 @@ Flask
 requests
 openai
 python-dotenv
+google_cloud_aiplatform

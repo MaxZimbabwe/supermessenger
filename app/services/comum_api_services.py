@@ -6,6 +6,7 @@ from ..utils.headers import getHeader, getHeaderAuth
 class ComumApiServices:
 
     url = "https://conexaodascompras.com.br/apiapps/api/"
+    #url = "http://api.local/apiapps/api/"
     token = False
 
     def __init__(self) -> None:
@@ -40,20 +41,3 @@ class ComumApiServices:
             print(f"HTTP error occurred: {http_err}")
         except Exception as err:
             print(f"Other error occurred: {err}")
-
-    def storeAnswers(self) -> None:
-        payload = {
-            'key1': 'value1',
-            'key2': 'value2'
-        }
-        params = {
-            'param1': 'value1',
-            'param2': 'value2'
-        }
-
-        response = requests.post(self.url+"/", headers=self.getHeaderAuth(), json=payload, params=params)
-        if response.status_code == 200:
-            data = response.json()
-            print(data)
-        else:
-            print(f"Failed to post data: {response.status_code}")

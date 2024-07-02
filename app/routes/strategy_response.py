@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from marshmallow import ValidationError
 
 app = Flask(__name__)
 
@@ -10,6 +11,10 @@ def create_response(data=None, message='', status='success', code=200):
         'code': code
     }
     return jsonify(response), code
+
+@app.errorhandler(400)
+def bad_validation(error: ValidationError):
+    return jsonify(error.messages), 422
 
 @app.errorhandler(400)
 def bad_request(error):
