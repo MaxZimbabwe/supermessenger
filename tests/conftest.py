@@ -1,6 +1,6 @@
 import pytest
 from app import create_app
-from app.services.comum_api_services import ComumApiServices
+from app.services.microservices.comum_api_service import ComumApiServices
 
 @pytest.fixture(scope='module')
 def api_comum():

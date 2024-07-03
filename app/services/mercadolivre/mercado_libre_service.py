@@ -1,7 +1,7 @@
 # my_flask_app/app/services/mercado_libre_service.py
 
 import requests
-from ..routes.strategy_response import create_response, bad_request
+from ...routes.strategy_response import create_response, bad_request
 from requests.exceptions import HTTPError
 
 class MercadoLivreServices:

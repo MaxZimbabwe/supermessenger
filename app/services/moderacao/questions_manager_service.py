@@ -1,6 +1,7 @@
-from ..extension import db
-from ..models.moderacao import Moderacao
-from ..models.moderacao_status import ModeracaoStatus
+from ...extension import db
+from ...models.moderacao import Moderacao
+from ...models.moderacao_status import ModeracaoStatus
+from ...models.colaboradores import Colaboradores
 
 class QuestionsManager:
     
@@ -45,3 +46,6 @@ class QuestionsManager:
         except Exception as e:
             db.session.rollback()
             return {'status': 'error', 'message': str(e)}
+
+    def colaboracoes():
+        pass

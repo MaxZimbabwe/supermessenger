@@ -22,7 +22,6 @@ def products():
         return create_response({'status': 'success'},message=result,status=201)    
     except Exception as e:
         return bad_request(e)
-    
 
 @api.route("/products", methods=['PATCH'])
 def products():

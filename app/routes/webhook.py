@@ -2,7 +2,7 @@
 
 from flask import Blueprint, request
 from ..routes.strategy_response import create_response, bad_request
-from ..services.handle_questions_service import HandleQuestionsService
+from ..services.questions.handle_questions_service import HandleQuestionsService
 
 webhook_bp = Blueprint('webhook', __name__)
 

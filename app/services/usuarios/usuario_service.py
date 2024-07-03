@@ -1,6 +1,6 @@
-from ..models.userapi import Userapp
-from ..models.usuario import Usuario
-from ..extension import db
+from ...models.userapi import Userapp
+from ...models.usuario import Usuario
+from ...extension import db
 
 class UsuarioService:
 

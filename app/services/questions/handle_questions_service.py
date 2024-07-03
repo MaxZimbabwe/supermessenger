@@ -1,9 +1,9 @@
-from .ia_services.cliente_ias import ClientIAs
-from .mercado_libre_service import MercadoLivreServices
-from .comum_api_services import ComumApiServices
-from .questions_manager import QuestionsManager
-from ..notifications.new_question_notify import NewQuestionNotify
-from .usuario_service import UsuarioService
+from ..ia_services.cliente_ias import ClientIAs
+from ..mercadolivre.mercado_libre_service import MercadoLivreServices
+from ..microservices.comum_api_service import ComumApiServices
+from ..moderacao.questions_manager_service import QuestionsManager
+from ...notifications.new_question_notify import NewQuestionNotify
+from ..usuarios.usuario_service import UsuarioService
 
 class HandleQuestionsService:
 

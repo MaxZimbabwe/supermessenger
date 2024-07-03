@@ -1,7 +1,7 @@
 import requests
 from flask import current_app
 from requests.exceptions import HTTPError
-from ..utils.headers import getHeader, getHeaderAuth
+from ...utils.headers import getHeader, getHeaderAuth
 
 class ComumApiServices:
 
