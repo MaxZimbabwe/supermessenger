@@ -56,7 +56,7 @@ class MercadoLivreServices:
         
     def get_item_details(self, iditems: tuple) -> dict:
         try:
-            url = f"https://api.mercadolibre.com/items?ids={",".join(iditems)}"
+            url = "https://api.mercadolibre.com/items?ids="+",".join(iditems)
             
             headers = {
                 'Content-Type': 'application/json',

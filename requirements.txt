@@ -5,3 +5,7 @@ requests
 openai
 python-dotenv
 google_cloud_aiplatform
+pymysql
+Flask-SQLAlchemy
+SQLAlchemy
+marshmallow
