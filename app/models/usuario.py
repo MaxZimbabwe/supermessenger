@@ -4,7 +4,7 @@ from ..extension import db
 class Usuario(db.Model):
     __tablename__ = 'usuarios'
 
-    idusuario = db.Column(db.Integer, db.ForeignKey('produtos_moderacao.idusuario'), primary_key=True)
+    idusuario = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(255), nullable=False)
     sobrenome = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False)

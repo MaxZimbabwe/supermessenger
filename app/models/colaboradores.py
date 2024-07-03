@@ -12,6 +12,9 @@ class Colaboradores(db.Model):
     createad_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    usuario = db.relationship('Usuario', foreign_keys=[idusuario], backref='colaboradores')
+    usuario_colaborador = db.relationship('Usuario', foreign_keys=[idusuariocolaborador], backref='colaboradores_colaborador')
+
     def __init__(self, idusuario, idusuariocolaborador):
         self.idusuario = idusuario
         self.idusuariocolaborador = idusuariocolaborador

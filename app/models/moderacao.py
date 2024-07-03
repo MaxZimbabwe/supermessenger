@@ -12,6 +12,8 @@ class Moderacao(db.Model):
     datacadastro = db.Column(db.DateTime, default=datetime.utcnow)
     datamodicacao = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    status = db.relationship('ModeracaoStatus', backref='moderacoes')
+
     def __init__(self, idusuario, questao, resposta, idstatus):
         self.idusuario = idusuario
         self.questao = questao

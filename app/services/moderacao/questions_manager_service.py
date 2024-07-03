@@ -2,6 +2,7 @@ from ...extension import db
 from ...models.moderacao import Moderacao
 from ...models.moderacao_status import ModeracaoStatus
 from ...models.colaboradores import Colaboradores
+from sqlalchemy.orm import joinedload
 
 class QuestionsManager:
     
@@ -22,7 +23,7 @@ class QuestionsManager:
 
     def questions(self, filter: list):
         try:
-            query = db.session.query(Moderacao).join(ModeracaoStatus)
+            query = Moderacao.query.options(joinedload(Moderacao.status))
             for condition in filter:
                 query = query.filter(condition)
             results = query.all()
@@ -48,4 +49,11 @@ class QuestionsManager:
             return {'status': 'error', 'message': str(e)}
 
     def colaboracoes():
-        pass
+        try:
+            query = Colaboradores.query.options(joinedload(Colaboradores.usuario_colaborador))
+            for condition in filter:
+                query = query.filter(condition)
+            results = query.all()
+            return {'status': 'success', 'data': results}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
