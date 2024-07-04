@@ -1,7 +1,7 @@
 from datetime import datetime
 from ..extension import db
 
-class Usuario(db.Model):
+class Usuarios(db.Model):
     __tablename__ = 'usuarios'
 
     idusuario = db.Column(db.Integer, primary_key=True)

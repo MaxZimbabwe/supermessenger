@@ -6,8 +6,6 @@ class ModeracaoStatus(db.Model):
     idstatus = db.Column(db.Integer, primary_key=True)
     descricao = db.Column(db.String(255), nullable=False)
 
-    moderacoes = db.relationship('Moderacao', backref='status', lazy=True)
-
     def __init__(self, descricao):
         self.descricao = descricao
 

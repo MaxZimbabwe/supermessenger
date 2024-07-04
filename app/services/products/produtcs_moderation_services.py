@@ -1,5 +1,5 @@
 from ...models.products_moderation import ProductsModeration
-from ...models.usuario import Usuario
+from ...models.usuarios import Usuario
 from ...extension import db
 
 class ProductsModerationServices:

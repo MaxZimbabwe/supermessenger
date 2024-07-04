@@ -3,6 +3,7 @@
 from flask import Flask
 from .config import Config
 from .routes.webhook import webhook_bp
+from .routes.moderacao_routes import moderacao_route
 from .extension import db
 
 def create_app():
@@ -18,5 +19,6 @@ def create_app():
 
     # Register Blueprints
     app.register_blueprint(webhook_bp)
+    app.register_blueprint(moderacao_route)
 
     return app

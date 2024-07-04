@@ -35,7 +35,7 @@ class HandleQuestionsService:
         title = subject[0]["body"].get("title")
         
         questionmaneger = QuestionsManager()
-        questionmaneger.store({"idusuario": idusario, "questao": title, "resposta": answer, "idstatus": 1})
+        questionmaneger.store({"idusuario": idusario, "idsubject": question.get("item_id"), "questao": title, "resposta": answer, "idstatus": 1})
 
         # Send a notification 
         NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)

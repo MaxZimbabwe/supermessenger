@@ -2,14 +2,21 @@ from ...extension import db
 from ...models.moderacao import Moderacao
 from ...models.moderacao_status import ModeracaoStatus
 from ...models.colaboradores import Colaboradores
+from ...models.usuarios import Usuarios
 from sqlalchemy.orm import joinedload
+from ...utils.Filter_params_field_models import FilterParamsFieldModels
 
 class QuestionsManager:
+
+    filterParams: FilterParamsFieldModels
+    def __init__(self) -> None:
+        self.filterParams = FilterParamsFieldModels()
     
     def store(self, data: dict):
         try:
             moderacao = Moderacao(
                 idusuario=data.get('idusuario'),
+                idsubject=data.get('idsubject'),
                 questao=data.get('questao'),
                 resposta=data.get('resposta'),
                 idstatus=data.get('idstatus')
@@ -19,16 +26,6 @@ class QuestionsManager:
             return {'status': 'success', 'message': 'Question stored successfully'}
         except Exception as e:
             db.session.rollback()
-            return {'status': 'error', 'message': str(e)}
-
-    def questions(self, filter: list):
-        try:
-            query = Moderacao.query.options(joinedload(Moderacao.status))
-            for condition in filter:
-                query = query.filter(condition)
-            results = query.all()
-            return {'status': 'success', 'data': results}
-        except Exception as e:
             return {'status': 'error', 'message': str(e)}
 
     def update(self, data: dict):
@@ -47,11 +44,23 @@ class QuestionsManager:
         except Exception as e:
             db.session.rollback()
             return {'status': 'error', 'message': str(e)}
-
-    def colaboracoes():
+        
+    def search(self, params: dict):
         try:
-            query = Colaboradores.query.options(joinedload(Colaboradores.usuario_colaborador))
-            for condition in filter:
+            query = Moderacao.query.options(joinedload(Moderacao.status))
+            filters = self.filterParams.filter_format(Moderacao, params)
+            for condition in filters:
+                query = query.filter(condition)
+            results = query.all()
+            return {'status': 'success', 'data': results}
+        except Exception as e:
+            return {'status': 'error', 'message': str(e)}
+        
+    def colaboracoes(self, params: dict):
+        try:
+            query = Colaboradores.query.options(joinedload(Usuarios.idusuario))
+            filters = self.filterParams.filter_format(Colaboradores, params)
+            for condition in filters:
                 query = query.filter(condition)
             results = query.all()
             return {'status': 'success', 'data': results}
