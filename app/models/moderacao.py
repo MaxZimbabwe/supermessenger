@@ -24,4 +24,4 @@ class Moderacao(db.Model):
         self.idsubject = idsubject
 
     def __repr__(self):
-        return f'<Moderacao {self.id} - {self.questao}>'
+        return f'<Moderacao {self.id}>'

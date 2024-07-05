@@ -45,14 +45,14 @@ class QuestionsManager:
             db.session.rollback()
             return {'status': 'error', 'message': str(e)}
         
-    def search(self, params: dict):
+    def search(self, params: dict) -> list:
         try:
             query = Moderacao.query.options(joinedload(Moderacao.status))
             filters = self.filterParams.filter_format(Moderacao, params)
             for condition in filters:
                 query = query.filter(condition)
             results = query.all()
-            return {'status': 'success', 'data': results}
+            return results
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
         

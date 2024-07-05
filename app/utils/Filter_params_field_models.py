@@ -1,16 +1,5 @@
-from sqlalchemy import func
 
 class FilterParamsFieldModels:
-
-    def __init__(self):
-        self.operators = {
-            "==": func.eq,
-            "!=": func.ne,
-            ">=": func.ge,
-            "<=": func.le,
-            ">": func.gt,
-            "<": func.lt,
-        }
 
     def filter_belong_model(self, model, params: dict) -> dict:
         """
@@ -31,22 +20,33 @@ class FilterParamsFieldModels:
         Generates SQLAlchemy filters based on the provided params and operator.
 
         Args:
-            model: The SQLAlchemy model class.
-            params: A dictionary containing filter parameters.
-            operator: The comparison operator to use (default: ==").
+        model: The SQLAlchemy model class.
+        params: A dictionary containing filter parameters.
+        operator: The comparison operator to use (default: ==").
 
         Returns:
-            A list of SQLAlchemy filter expressions.
+        A list of SQLAlchemy filter expressions.
 
         Raises:
-            ValueError: If an invalid operator is provided.
+        ValueError: If an invalid operator is provided.
         """
         filters = []
         fields_valid = self.filter_belong_model(model, params)
-        if operator not in self.operators:
+        if operator not in ["==", "!=", ">=", "<=", ">", "<"]:
             raise ValueError(f"Invalid operator: {operator}")
 
         for field, value in params.items():
             if field in fields_valid:
-                filters.append(self.operators[operator](getattr(model, field), value))
-        return filters
+                if operator == "==":
+                    filters.append(getattr(model, field) == value)
+                elif operator == "!=":
+                    filters.append(getattr(model, field) != value)
+                elif operator == ">=":
+                    filters.append(getattr(model, field) >= value)
+                elif operator == "<=":
+                    filters.append(getattr(model, field) <= value)
+                elif operator == ">":
+                    filters.append(getattr(model, field) > value)
+                elif operator == "<":
+                    filters.append(getattr(model, field) < value)
+        return filters        
