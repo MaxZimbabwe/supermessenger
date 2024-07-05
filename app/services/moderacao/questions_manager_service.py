@@ -51,7 +51,7 @@ class QuestionsManager:
             filters = self.filterParams.filter_format(Moderacao, params)
             for condition in filters:
                 query = query.filter(condition)
-            results = query.all()
+            results = self.filterParams.filter_return(query.all())
             return results
         except Exception as e:
             return {'status': 'error', 'message': str(e)}

@@ -1,3 +1,4 @@
+import json
 
 class FilterParamsFieldModels:
 
@@ -50,3 +51,15 @@ class FilterParamsFieldModels:
                 elif operator == "<":
                     filters.append(getattr(model, field) < value)
         return filters        
+    
+    def filter_return(query: list) -> json:
+        # Check if user exists before converting
+        if query:
+            # Convert user object to dictionary
+            query_dict = query.__dict__
+
+            # Exclude unwanted attributes (e.g., password hash)
+            del query_dict['_sa_instance_state']  # Remove SQLAlchemy internal attribute
+
+            # Convert dictionary to JSON string
+            return json.dumps(query_dict)
