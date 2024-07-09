@@ -13,11 +13,12 @@ class ProductsModeration(db.Model):
     datacadastro = db.Column(db.DateTime, default=datetime.utcnow)
     datamodicacao = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def __init__(self, idusuario, idproduto, titulo, descricao):
+    def __init__(self, idusuario, idproduto, idproexterno,titulo, descricao):
         self.idusuario = idusuario
         self.idproduto = idproduto
+        self.idproexterno = idproexterno
         self.titulo = titulo
         self.descricao = descricao
 
     def __repr__(self):
-        return f'<Produtos {self.id} - {self.titulo}>'
+        return f'<Produtos {self.idproduto}>'

@@ -1,6 +1,5 @@
 from flask import Flask, jsonify
 from marshmallow import ValidationError
-import json
 
 app = Flask(__name__)
 

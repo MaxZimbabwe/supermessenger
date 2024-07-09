@@ -9,12 +9,12 @@ class Moderacao(db.Model):
     idsubject = db.Column(db.String(255), nullable=False)
     questao = db.Column(db.String(255), nullable=False)
     resposta = db.Column(db.String(255), nullable=False)
-    idstatus = db.Column(db.Integer, db.ForeignKey('moderacao_status.idstatus'), nullable=False)
+    idstatus = db.Column(db.Integer, nullable=False)
     datacadastro = db.Column(db.DateTime, default=datetime.utcnow)
     datamodicacao = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    status = db.relationship('ModeracaoStatus', backref='moderacao_status')
-    usuario = db.relationship('Usuarios', backref='moderacao')
+    status = db.relationship('ModeracaoStatus', uselist=False, back_populates='moderacao')
+    usuario = db.relationship('Usuarios', uselist=False, back_populates='moderacoes')
 
     def __init__(self, idusuario, idsubject, questao, resposta, idstatus):
         self.idusuario = idusuario

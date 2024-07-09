@@ -14,3 +14,4 @@ class SearchRules(Schema):
 
 class SearchColaradoresRules(Schema):
     idusuariocolaborador = fields.Int(required=True)
+    status = fields.Int(required=True)

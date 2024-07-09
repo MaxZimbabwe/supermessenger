@@ -5,6 +5,11 @@ from ...models.colaboradores import Colaboradores
 from ...models.usuarios import Usuarios
 from sqlalchemy.orm import joinedload
 from ...utils.Filter_params_field_models import FilterParamsFieldModels
+from ...schemas.moderacao_schema import ModeracaoSchema
+from ...schemas.colaboradores_schema import ColaboradoresSchema
+
+moderacao_schema = ModeracaoSchema(many=True)
+colaboracao_schema = ColaboradoresSchema(many=True)
 
 class QuestionsManager:
 
@@ -47,22 +52,38 @@ class QuestionsManager:
         
     def search(self, params: dict) -> list:
         try:
-            query = Moderacao.query.options(joinedload(Moderacao.status))
+            query = db.session.query(Moderacao).options(
+                joinedload(Moderacao.status),
+                # Add other relationships you want to load here
+            )
             filters = self.filterParams.filter_format(Moderacao, params)
             for condition in filters:
                 query = query.filter(condition)
-            results = self.filterParams.filter_return(query.all())
-            return results
+            results = query.all()
+
+            if results:
+                data = moderacao_schema.dump(results)
+            else:
+                data = {}
+            return data
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
         
     def colaboracoes(self, params: dict):
         try:
-            query = Colaboradores.query.options(joinedload(Usuarios.idusuario))
+            query = db.session.query(Colaboradores).options(
+                joinedload(Colaboradores.colaboradores),
+                joinedload(Colaboradores.colaborando),
+                # Add other relationships you want to load here
+            )
             filters = self.filterParams.filter_format(Colaboradores, params)
             for condition in filters:
                 query = query.filter(condition)
             results = query.all()
-            return {'status': 'success', 'data': results}
+            if results:
+                data = colaboracao_schema.dump(results)
+            else:
+                data = {}
+            return data
         except Exception as e:
             return {'status': 'error', 'message': str(e)}
