@@ -7,10 +7,12 @@ class StoreRules(Schema):
     
 class UpdateRules(Schema):
     id = fields.Int(required=True)
-    idsubject = fields.Int(required=True)
+    idstatus = fields.Int(required=False)
+    resposta = fields.Str(required=False)
         
 class SearchRules(Schema):
     idusuario = fields.Int(required=True)
+    idstatus = fields.Int(required=False)
 
 class SearchColaradoresRules(Schema):
     idusuariocolaborador = fields.Int(required=True)

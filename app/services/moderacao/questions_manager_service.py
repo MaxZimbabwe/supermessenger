@@ -7,6 +7,7 @@ from sqlalchemy.orm import joinedload
 from ...utils.Filter_params_field_models import FilterParamsFieldModels
 from ...schemas.moderacao_schema import ModeracaoSchema
 from ...schemas.colaboradores_schema import ColaboradoresSchema
+from sqlalchemy import update
 
 moderacao_schema = ModeracaoSchema(many=True)
 colaboracao_schema = ColaboradoresSchema(many=True)
@@ -33,21 +34,14 @@ class QuestionsManager:
             db.session.rollback()
             return {'status': 'error', 'message': str(e)}
 
-    def update(self, data: dict):
+    def update(self, params: dict):
         try:
-            moderacao = Moderacao.query.get(data.get('id'))
-            if not moderacao:
-                return {'status': 'error', 'message': 'Question not found'}
-            
-            moderacao.idusuario = data.get('idusuario', moderacao.idusuario)
-            moderacao.questao = data.get('questao', moderacao.questao)
-            moderacao.resposta = data.get('resposta', moderacao.resposta)
-            moderacao.idstatus = data.get('idstatus', moderacao.idstatus)
-            
+            db.session.execute(update(Moderacao),[
+                params
+            ])
             db.session.commit()
-            return {'status': 'success', 'message': 'Question updated successfully'}
+            return True
         except Exception as e:
-            db.session.rollback()
             return {'status': 'error', 'message': str(e)}
         
     def search(self, params: dict) -> list:
@@ -86,4 +80,5 @@ class QuestionsManager:
                 data = {}
             return data
         except Exception as e:
-            return {'status': 'error', 'message': str(e)}
+            return {'status': 'error', 'message': str(e)}     
+    

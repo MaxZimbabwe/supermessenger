@@ -20,21 +20,21 @@ def store():
     try:
         moderacoes = QuestionsManager()
         result = moderacoes.store(request.args)
-        return create_response({'status': 'success'},message=result,status=201)    
+        return create_response({'status': 'success'}, message=result, status=201)
     except Exception as e:
         return bad_request(e)
 
 @moderacao_route.route("/questions", methods=['PATCH'])
 def update():
     try:
-        rule_update.load(request.args)
+        rule_update.load(request.json)
     except ValidationError as error:
         return bad_validation(error=error)
     
     try:
         moderacoes = QuestionsManager()
-        result = moderacoes.update(request.args)
-        return create_response({'status': 'success'},message=result,status=201)    
+        result = moderacoes.update(request.json)
+        return create_response({'updated': True if result==True else False}, message=result, status=201)
     except Exception as e:
         return bad_request(e)
 
@@ -48,7 +48,7 @@ def search():
     try:
         moderacoes = QuestionsManager()
         result = moderacoes.search(request.args)
-        return create_response(result,message="",status=201)    
+        return create_response(result, message="", status=201)    
     except Exception as e:
         return bad_request(e)
     
@@ -62,6 +62,6 @@ def search_colaboradores():
     try:
         moderacoes = QuestionsManager()
         result = moderacoes.colaboracoes(request.args)
-        return create_response(result,message="",status=201)    
+        return create_response(result, message="", status=201)    
     except Exception as e:
         return bad_request(e)
