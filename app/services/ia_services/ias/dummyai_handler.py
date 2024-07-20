@@ -1,6 +1,6 @@
 # my_flask_app/app/services/chatgpt_service.py
 
-from openai import OpenAI
+import openai
 from flask import current_app
 from ..handler import Handler
 
