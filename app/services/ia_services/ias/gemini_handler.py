@@ -1,6 +1,6 @@
 # my_flask_app/app/services/chatgpt_service.py
 
-from openai import OpenAI
+import openai
 from flask import current_app
 from ..handler import Handler
 
@@ -8,7 +8,7 @@ class GemeniHandler(Handler):
 
     def handle(self, subject: str, question: str) -> str:
         try:
-            client = OpenAI(
+            client = openai.api_key(
                 api_key=current_app.config['OPENAI_API_KEY'],
             )
 
