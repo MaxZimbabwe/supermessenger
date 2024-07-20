@@ -1,4 +1,4 @@
-#!/usr/bin/scl enable rh-python35 -- /homeX/CONTA/.virtualenv/bin/python
+#!/usr/bin/scl enable rh-python35 -- /home/cone0002/.venv/bin/python
 import os
 import sys
 
