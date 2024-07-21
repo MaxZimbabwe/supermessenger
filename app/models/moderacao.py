@@ -7,6 +7,7 @@ class Moderacao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     idusuario = db.Column(db.Integer, db.ForeignKey('usuarios.idusuario'), nullable=False)
     idsubject = db.Column(db.String(255), nullable=False)
+    titulo = db.Column(db.String(255), nullable=False)
     questao = db.Column(db.String(255), nullable=False)
     resposta = db.Column(db.String(255), nullable=False)
     idstatus = db.Column(db.Integer, nullable=False)
@@ -16,8 +17,9 @@ class Moderacao(db.Model):
     status = db.relationship('ModeracaoStatus', uselist=False, back_populates='moderacao')
     usuario = db.relationship('Usuarios', uselist=False, back_populates='moderacoes')
 
-    def __init__(self, idusuario, idsubject, questao, resposta, idstatus):
+    def __init__(self, idusuario, idsubject, titulo, questao, resposta, idstatus):
         self.idusuario = idusuario
+        self.titulo = titulo
         self.questao = questao
         self.resposta = resposta
         self.idstatus = idstatus
