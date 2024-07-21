@@ -19,7 +19,10 @@ def bad_validation(error: ValidationError):
 
 @app.errorhandler(400)
 def bad_request(error):
-    return create_response(message="Bad request", status='error', code=400)
+    # Extraindo informações do erro
+    error_description = str(error.description) if hasattr(error, 'description') else 'No description available'
+    error_message = f"Bad request: {error_description}"    
+    return create_response(message=error_message, status='error', code=400)
 
 @app.errorhandler(401)
 def unauthorized(error):
