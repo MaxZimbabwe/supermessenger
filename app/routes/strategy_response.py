@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
 from marshmallow import ValidationError
+from ..models.logs import Logs
+from ..extension import db
 
 app = Flask(__name__)
 
@@ -22,13 +24,13 @@ def bad_request(error):
     # Extraindo informações do erro
     error_description = str(error.description) if hasattr(error, 'description') else 'No description available'
 
-    logs = ''
-    if isinstance(error, dict):
-        if error.get('args',False):
-            list_errors = error.get('args',[])
-            logs = ",".join(list_errors)
-
+    logs = ",".join(error.args) + error.doc    
     error_message = f"Bad request: {error_description} {logs}"
+
+    new_log = Logs(log=error_message)
+    db.session.add(new_log)
+    db.session.commit()
+
     return create_response(message=error_message, status='error', code=400)
 
 @app.errorhandler(401)
