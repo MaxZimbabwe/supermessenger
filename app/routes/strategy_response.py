@@ -21,7 +21,14 @@ def bad_validation(error: ValidationError):
 def bad_request(error):
     # Extraindo informações do erro
     error_description = str(error.description) if hasattr(error, 'description') else 'No description available'
-    error_message = f"Bad request: {error_description}"    
+
+    logs = ''
+    if isinstance(error, dict):
+        if error.get('args',False):
+            list_errors = error.get('args',[])
+            logs = ",".join(list_errors)
+
+    error_message = f"Bad request: {error_description} {logs}"
     return create_response(message=error_message, status='error', code=400)
 
 @app.errorhandler(401)
