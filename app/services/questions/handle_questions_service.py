@@ -19,7 +19,7 @@ class HandleQuestionsService:
     def handle_question(self, question_data: dict):
         idusario = question_data.get('idusuario')
         code = question_data.get('code')
-        token_ml = ''#self.getTokenMl(idusario,code)
+        token_ml = self.getTokenMl(idusario,code)
 
         mlapi = MercadoLivreServices()
         mlapi.set_token_user(token_ml)
