@@ -38,4 +38,4 @@ class HandleQuestionsService:
         questionmaneger.store({"idusuario": idusario, "idsubject": question.get("item_id"),"titulo": title, "questao": question.get("text"), "resposta": answer, "idstatus": 1})
 
         # Send a notification 
-        NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)
+        # NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)
