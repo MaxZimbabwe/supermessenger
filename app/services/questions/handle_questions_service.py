@@ -31,7 +31,7 @@ class HandleQuestionsService:
         answer = ias.question(subject[0]["body"].get("title"), question.get("text"))
 
         user = UsuarioService()
-        token = user.get_fcem_token(idusario)
+        #token = user.get_fcem_token(idusario)
         title = subject[0]["body"].get("title")
         
         questionmaneger = QuestionsManager()
