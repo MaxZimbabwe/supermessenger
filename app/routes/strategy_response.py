@@ -2,6 +2,8 @@ from flask import Flask, jsonify
 from marshmallow import ValidationError
 from ..models.logs import Logs
 from ..extension import db
+import traceback
+from json import JSONDecodeError
 
 app = Flask(__name__)
 
@@ -21,17 +23,27 @@ def bad_validation(error: ValidationError):
 
 @app.errorhandler(400)
 def bad_request(error):
-    # Extraindo informações do erro
-    error_description = str(error.description) if hasattr(error, 'description') else 'No description available'
+    # Extracting error information
+    error_type = type(error).__name__
+    error_description = str(error)
 
-    logs = ",".join(error.args) + error.doc    
-    error_message = f"Bad request: {error_description} {logs}"
+    # Handling JSONDecodeError specifically
+    if isinstance(error, JSONDecodeError):
+        error_trace = traceback.format_exc()
+        error_message = f"JSON Decode Error: {error_description}, Traceback: {error_trace}"
+        response_code = 400
+    else:
+        # Getting full traceback for other exceptions
+        error_trace = traceback.format_exc()
+        error_message = f"Error type: {error_type}, Description: {error_description}, Traceback: {error_trace}"
+        response_code = 500
 
+    # Saving the log into the database
     new_log = Logs(log=error_message)
     db.session.add(new_log)
     db.session.commit()
 
-    return create_response(message=error_message, status='error', code=400)
+    return create_response(message=error_message, status='error', code=response_code)
 
 @app.errorhandler(401)
 def unauthorized(error):
