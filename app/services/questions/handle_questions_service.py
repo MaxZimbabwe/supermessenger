@@ -26,7 +26,7 @@ class HandleQuestionsService:
 
         question = mlapi.get_question_text_from_resource(question_data.get("resource"))
         status = question.get("status")
-        
+
         if status == 'UNANSWERED':
             items = (question.get("item_id"),)
             subject = mlapi.get_item_details(items)
@@ -34,11 +34,11 @@ class HandleQuestionsService:
             answer = ias.question(subject[0]["body"].get("title"), question.get("text"))
 
             user = UsuarioService()
-            #token = user.get_fcem_token(idusario)
+            token = user.get_fcem_token(idusario)
             title = subject[0]["body"].get("title")
             
             questionmaneger = QuestionsManager()
             questionmaneger.store({"idusuario": idusario, "idsubject": question.get("item_id"),"titulo": title, "questao": question.get("text"), "resposta": answer, "idstatus": 1})
 
             # Send a notification 
-            # NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)
+            NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)
