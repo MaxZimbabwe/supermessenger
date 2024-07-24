@@ -25,17 +25,20 @@ class HandleQuestionsService:
         mlapi.set_token_user(token_ml)
 
         question = mlapi.get_question_text_from_resource(question_data.get("resource"))
-        items = (question.get("item_id"),)
-        subject = mlapi.get_item_details(items)
-        ias = ClientIAs()
-        answer = ias.question(subject[0]["body"].get("title"), question.get("text"))
-
-        user = UsuarioService()
-        #token = user.get_fcem_token(idusario)
-        title = subject[0]["body"].get("title")
+        status = question.get("status")
         
-        questionmaneger = QuestionsManager()
-        questionmaneger.store({"idusuario": idusario, "idsubject": question.get("item_id"),"titulo": title, "questao": question.get("text"), "resposta": answer, "idstatus": 1})
+        if status == 'UNANSWERED':
+            items = (question.get("item_id"),)
+            subject = mlapi.get_item_details(items)
+            ias = ClientIAs()
+            answer = ias.question(subject[0]["body"].get("title"), question.get("text"))
 
-        # Send a notification 
-        # NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)
+            user = UsuarioService()
+            #token = user.get_fcem_token(idusario)
+            title = subject[0]["body"].get("title")
+            
+            questionmaneger = QuestionsManager()
+            questionmaneger.store({"idusuario": idusario, "idsubject": question.get("item_id"),"titulo": title, "questao": question.get("text"), "resposta": answer, "idstatus": 1})
+
+            # Send a notification 
+            # NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)
