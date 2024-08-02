@@ -23,6 +23,7 @@ class QuestionsManager:
             moderacao = Moderacao(
                 idusuario=data.get('idusuario'),
                 idsubject=data.get('idsubject'),
+                idpergunta=data.get('idpergunta'),
                 titulo=data.get('titulo'),
                 questao=data.get('questao'),
                 resposta=data.get('resposta'),

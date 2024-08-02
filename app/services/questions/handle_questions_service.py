@@ -32,13 +32,12 @@ class HandleQuestionsService:
             subject = mlapi.get_item_details(items)
             ias = ClientIAs()
             answer = ias.question(subject[0]["body"].get("title"), question.get("text"))
-
-            user = UsuarioService()
-            token = user.get_fcem_token(idusario)
+            
             title = subject[0]["body"].get("title")
             
             questionmaneger = QuestionsManager()
-            questionmaneger.store({"idusuario": idusario, "idsubject": question.get("item_id"),"titulo": title, "questao": question.get("text"), "resposta": answer, "idstatus": 1})
+            questionmaneger.store({"idusuario": idusario, "idpergunta": question_data.get('_id'), "idsubject": question.get("item_id"),"titulo": title, "questao": question.get("text"), "resposta": answer, "idstatus": 1})
 
-            # Send a notification 
-            NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)
+            for token in question_data.get('tokens'):
+                # Send a notification 
+                NewQuestionNotify.send_push_notification(token=token,body=answer,title=title)

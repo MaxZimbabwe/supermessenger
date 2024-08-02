@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields, validate
 
 class StoreRules(Schema):
-    idusuario = fields.Int(required=True)
+    idusuario = fields.Int(required=True)    
     questao = fields.Str(required=True, validate=validate.Length(min=1))
     resposta = fields.Str(required=True, validate=validate.Length(min=1))
     
