@@ -33,7 +33,7 @@ class HandleQuestionsService:
         question = self.get_question(token_ml, question_id[-1])
         status = question.get("status")
 
-        if status != 'UNANSWERED':
+        if status == 'UNANSWERED':
             items = (question.get("item_id"),)
             subject = mlapi.get_item_details(items)
             ias = ClientIAs()
@@ -55,10 +55,10 @@ class HandleQuestionsService:
         question = self.get_question(token_ml=token_ml,resource=params.get("idresource"))
         status = question.get("status")
 
-        if status != 'UNANSWERED':
+        if status == 'UNANSWERED':
             mlapi = MercadoLivreServices()
             mlapi.set_token_user(token_ml)
-            #mlapi.send_answer_to_mercadolibre(question, params.get("resposta"))            
+            mlapi.send_answer_to_mercadolibre(question, params.get("resposta"))
 
         moderacao = QuestionsManager()
         moderacao.update(params)
