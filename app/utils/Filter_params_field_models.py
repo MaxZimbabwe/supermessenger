@@ -32,11 +32,19 @@ class FilterParamsFieldModels:
         """
         filters = []
         fields_valid = self.filter_belong_model(model, params)
-        if operator not in ["==", "!=", ">=", "<=", ">", "<"]:
-            raise ValueError(f"Invalid operator: {operator}")
+        self.operator_valid(operator)
 
-        for field, value in params.items():
+        for field, value_field in params.items():
             if field in fields_valid:
+
+                #It is possible to pass a value with two parameters, the value and the operator into a list
+                customs = self.handle_custom_parameter(value_field)
+                if len(customs)>1 and self.operator_valid(customs[0]):                    
+                    value = customs[1]
+                    operator = customs[0]
+                else:
+                    value = value_field
+
                 if operator == "==":
                     filters.append(getattr(model, field) == value)
                 elif operator == "!=":
@@ -50,3 +58,12 @@ class FilterParamsFieldModels:
                 elif operator == "<":
                     filters.append(getattr(model, field) < value)
         return filters
+
+    def operator_valid(self, operator: str):
+        if operator not in ["==", "!=", ">=", "<=", ">", "<"]:
+            raise ValueError(f"Invalid operator: {operator}")            
+        return True
+        
+    def handle_custom_parameter(self, value: str):
+        content = value.split("&")
+        return content

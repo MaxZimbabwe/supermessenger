@@ -15,9 +15,9 @@ class MercadoLivreServices:
     def set_token_user(self, token: str):
         self.token = token
 
-    def send_answer_to_mercadolibre(self, question_data, answer):
+    def send_answer_to_mercadolibre(self, question_data: dict, answer: str):
         try:
-            question_id = question_data.get('_id')
+            question_id = question_data.get('id')
             access_token = self.token
             url = f"https://api.mercadolibre.com/answers?access_token={access_token}"
             
@@ -27,7 +27,7 @@ class MercadoLivreServices:
             }
             
             response = requests.post(url, json=payload)            
-            return create_response(message="Answer successfully sent to Mercado Libre", data=response)
+            return response.json()
             
         except HTTPError as http_err:
             return bad_request(http_err)
@@ -36,8 +36,7 @@ class MercadoLivreServices:
 
     def get_question_text_from_resource(self, resource: str) -> dict:
         try:
-            question_id = resource.split("/")
-            url = f"https://api.mercadolibre.com/questions/{question_id[-1]}"
+            url = f"https://api.mercadolibre.com/questions/{resource}"
             
             headers = {
                 'Content-Type': 'application/json',

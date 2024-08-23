@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from marshmallow import ValidationError
 from ..services.moderacao.questions_manager_service import QuestionsManager
+from ..services.questions.handle_questions_service import HandleQuestionsService
 from .rules.moderacao_rules import SearchColaradoresRules, SearchRules, UpdateRules, StoreRules
 from .strategy_response import bad_validation, create_response, bad_request
 
@@ -32,9 +33,9 @@ def update():
         return bad_validation(error=error)
     
     try:
-        moderacoes = QuestionsManager()
-        result = moderacoes.update(request.json)
-        return create_response({'updated': True if result==True else False}, message=result, status=201)
+        handle_question = HandleQuestionsService()
+        result = handle_question.answer_question(request.json)
+        return create_response(result, message="", status=201)
     except Exception as e:
         return bad_request(e)
 
